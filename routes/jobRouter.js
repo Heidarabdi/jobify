@@ -4,6 +4,7 @@ const router = Router();
 
 // import controllers
 import {createJob, getAllJobs, getJobById, updateJob, deleteJob} from '../controllers/jobController.js';
+import {validateIdParam, validateJobInput} from "../middleware/validationMiddleware.js";
 
 
 // routes
@@ -14,7 +15,13 @@ import {createJob, getAllJobs, getJobById, updateJob, deleteJob} from '../contro
 // router.delete('/:id', deleteJob);
 
 // or you can use this syntax
-router.route('/').get(getAllJobs).post(createJob);
-router.route('/:id').get(getJobById).patch(updateJob).delete(deleteJob);
+router.route('/')
+    .get(getAllJobs)
+    .post(validateJobInput, createJob);
+
+router.route('/:id')
+    .get(validateIdParam, getJobById)
+    .patch(validateIdParam,validateJobInput, updateJob)
+    .delete(validateIdParam, deleteJob);
 
 export default router;

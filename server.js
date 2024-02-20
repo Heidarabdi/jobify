@@ -3,7 +3,13 @@ import express from 'express';
 import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
+
 import jobRouter from './routes/jobRouter.js';
+import authRouter from "./routes/authRouter.js";
+import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+import {authenticateUser} from "./middleware/authMiddleware.js";
+import userRouter from "./routes/userRouter.js";
 
 
 dotenv.config();
@@ -14,12 +20,15 @@ const PORT = process.env.PORT || 5100;
 if(process.env.NODE_ENV === 'DEVELOPMENT'){
     app.use(morgan('dev'));
 }
+app.use(cookieParser());
 app.use(express.json());
 
 
 
 // routes
-app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/jobs' , authenticateUser, jobRouter);
+app.use('/api/v1/users' , authenticateUser, userRouter);
+app.use('/api/v1/auth' ,authRouter);
 
 
 // not found middleware
@@ -28,10 +37,7 @@ app.use('*', (req, res) => {
 });
 
 // error handler middleware
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).json({error: 'something went wrong'});
-});
+app.use(errorHandlerMiddleware);
 
 // listen
 try {
