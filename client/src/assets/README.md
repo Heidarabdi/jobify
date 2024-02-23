@@ -4210,7 +4210,7 @@ export default JobsContainer;
 
 #### JobsContainer - CSS (optional)
 
-wrappers/JobsContainer.js
+wrappers/JobsContainer.jsx
 
 ```js
 import styled from 'styled-components';

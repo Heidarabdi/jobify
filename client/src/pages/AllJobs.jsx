@@ -1,11 +1,34 @@
-import React from 'react'
+import { toast } from 'react-toastify';
+import { JobsContainer, SearchContainer } from '../components';
+import { useLoaderData } from 'react-router-dom';
+import { useContext, createContext } from 'react';
+import customFetch from "../utils/customFetch.js";
 
-function AllJobs() {
-  return (
-    <div>
-      <h1>All jobs</h1>
-    </div>
-  )
-}
+export const loader = async ({ request }) => {
+    try {
+        const { data } = await customFetch.get('/jobs');
+        return {
+            data,
+        };
+    } catch (error) {
+        toast.error(error?.response?.data?.msg);
+        return error;
+    }
+};
 
-export default AllJobs
+const AllJobsContext = createContext();
+
+const AllJobs = () => {
+    const { data } = useLoaderData();
+
+    return (
+        // eslint-disable-next-line react/jsx-no-undef
+        <AllJobsContext.Provider value={{ data }}>
+            <SearchContainer />
+            <JobsContainer />
+        </AllJobsContext.Provider>
+    );
+};
+
+export const useAllJobsContext = () => useContext(AllJobsContext);
+export default AllJobs;

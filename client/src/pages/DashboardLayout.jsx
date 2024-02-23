@@ -1,13 +1,26 @@
-import { Outlet } from 'react-router-dom';
+import {Outlet, redirect, useLoaderData, useNavigate} from 'react-router-dom';
 
 import Wrapper from '../assets/wrappers/Dashboard';
 import {BigSidebar, Navbar, SmallSidebar} from '../components';
 
 import { useState, createContext, useContext } from 'react';
+import customFetch from "../utils/customFetch.js";
+import {toast} from "react-toastify";
 const DashboardContext = createContext();
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const loader = async () => {
+    try {
+        const { data } = await customFetch('/users/current-user');
+        return data;
+    } catch (error) {
+        return redirect('/');
+    }
+};
 const Dashboard = (isDarkThemeEnabled) => {
-    // temp
-    const user = { name: 'john' };
+    const {user} = useLoaderData();
+
+    const navigate = useNavigate();
 
     const [showSidebar, setShowSidebar] = useState(false);
     // eslint-disable-next-line no-unused-vars
@@ -26,7 +39,9 @@ const Dashboard = (isDarkThemeEnabled) => {
     };
 
     const logoutUser = async () => {
-        console.log('logout user');
+        navigate('/');
+        await customFetch('auth/logout');
+        toast.success('Logged out successfully');
     };
     return (
         <DashboardContext.Provider
@@ -46,7 +61,7 @@ const Dashboard = (isDarkThemeEnabled) => {
                     <div>
                         <Navbar />
                         <div className='dashboard-page'>
-                            <Outlet />
+                            <Outlet context={{user}} />
                         </div>
                     </div>
                 </main>
@@ -55,6 +70,7 @@ const Dashboard = (isDarkThemeEnabled) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useDashboardContext = () => useContext(DashboardContext);
 
 export default Dashboard;
