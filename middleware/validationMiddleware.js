@@ -86,7 +86,7 @@ export const validateLoginInput = withValidationErrors([
 ]);
 
 // update user validation
-const validateUpdateUserInput = withValidationErrors([
+export const validateUpdateUserInput = withValidationErrors([
     body('name').notEmpty().withMessage('name is required'),
     body('email')
         .notEmpty()

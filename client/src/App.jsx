@@ -21,11 +21,13 @@ import {action as LoginAction} from './pages/Login';
 import {action as AddJobAction} from './pages/AddJob';
 import {action as EditJobAction} from './pages/EditJob';
 import {action as DeleteJobAction} from './pages/DeleteJob'
+import {action as ProfileAction} from './pages/Profile';
 
 // loaders
 import {loader as DashboardLoader} from './pages/DashboardLayout';
 import {loader as AllJobsLoader} from './pages/AllJobs';
 import {loader as EditJobLoader} from './pages/EditJob';
+import {loader as AdminLoader} from './pages/Admin';
 const checkDefaultTheme = () => {
     const isDarkTheme =
         localStorage.getItem('darkTheme') === 'true'
@@ -76,10 +78,12 @@ const router = createBrowserRouter([
                     {
                         path: 'profile',
                         element: <Profile />,
+                        action: ProfileAction,
                     },
                     {
                         path: 'admin',
                         element: <Admin />,
+                        loader: AdminLoader,
                     },
                     {
                         path:'edit-job/:id',

@@ -5,6 +5,7 @@ const router = Router();
 // import controllers
 import {createJob, getAllJobs, getJobById, updateJob, deleteJob} from '../controllers/jobController.js';
 import {validateIdParam, validateJobInput} from "../middleware/validationMiddleware.js";
+import {checkForTestUser} from "../middleware/authMiddleware.js";
 
 
 // routes
@@ -17,11 +18,11 @@ import {validateIdParam, validateJobInput} from "../middleware/validationMiddlew
 // or you can use this syntax
 router.route('/')
     .get(getAllJobs)
-    .post(validateJobInput, createJob);
+    .post(validateJobInput, checkForTestUser ,createJob);
 
 router.route('/:id')
     .get(validateIdParam, getJobById)
-    .patch(validateIdParam,validateJobInput, updateJob)
-    .delete(validateIdParam, deleteJob);
+    .patch(validateIdParam, checkForTestUser, validateJobInput, updateJob)
+    .delete(validateIdParam, checkForTestUser , deleteJob);
 
 export default router;
