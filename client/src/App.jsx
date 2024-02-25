@@ -28,6 +28,8 @@ import {loader as DashboardLoader} from './pages/DashboardLayout';
 import {loader as AllJobsLoader} from './pages/AllJobs';
 import {loader as EditJobLoader} from './pages/EditJob';
 import {loader as AdminLoader} from './pages/Admin';
+import {loader as StatsLoader} from './pages/Stats';
+
 const checkDefaultTheme = () => {
     const isDarkTheme =
         localStorage.getItem('darkTheme') === 'true'
@@ -68,7 +70,11 @@ const router = createBrowserRouter([
                         element: <AddJob />,
                         action: AddJobAction,
                     },
-                    { path: 'stats', element: <Stats /> },
+                    {
+                        path: 'stats',
+                        element: <Stats />,
+                        loader: StatsLoader,
+                    },
                     {
                         path: 'all-jobs',
                         element: <AllJobs />,
