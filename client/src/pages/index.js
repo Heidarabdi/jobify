@@ -10,5 +10,5 @@ export { default as Admin} from './Admin';
 export { default as Stats} from './Stats';
 export { default as Error} from './Error';
 export { default as Landing} from './Landing';
-
+export { default as ErrorElement} from './ErrorElement';
 

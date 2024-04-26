@@ -1,6 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import {
     HomeLayout,
     DashboardLayout,
@@ -12,7 +15,7 @@ import {
     Stats,
     AllJobs,
     Profile,
-    Admin, EditJob,
+    Admin, EditJob, ErrorElement,
 } from "./pages";
 
 // actions
@@ -29,6 +32,14 @@ import {loader as AllJobsLoader} from './pages/AllJobs';
 import {loader as EditJobLoader} from './pages/EditJob';
 import {loader as AdminLoader} from './pages/Admin';
 import {loader as StatsLoader} from './pages/Stats';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5,// 5 minutes
+        },
+    },
+});
 
 const checkDefaultTheme = () => {
     const isDarkTheme =
@@ -74,6 +85,7 @@ const router = createBrowserRouter([
                         path: 'stats',
                         element: <Stats />,
                         loader: StatsLoader,
+                        errorElement: <ErrorElement />
                     },
                     {
                         path: 'all-jobs',
@@ -108,8 +120,13 @@ const router = createBrowserRouter([
     ],
     );
 
-function App() {
-   return <RouterProvider router={router} />;
-}
+const App = () => {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    );
+};
 
 export default App;
